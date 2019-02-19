@@ -17,7 +17,6 @@ vector<char *> split(string);
 int main() {
   int child;
   string cmd;
-  vector<string> vargs;
 
   while (true) {
     cout << "> ";
@@ -30,8 +29,8 @@ int main() {
     child = fork();
 
     if (child == 0) {
-      vector<char *> vec = split(cmd);
-      char **cmds = &vec[0];
+      vector<char *> vcmds = split(cmd);
+      char **cmds = &vcmds[0];
       execvp(cmds[0], cmds);
       exit(0);
     } else {
