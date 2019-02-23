@@ -6,14 +6,19 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
 
+using std::ofstream;
+using std::ifstream;
 using std::string;
 using std::vector;
 using std::cout;
 using std::cin;
+using std::cerr;
 
 vector<char *> split(string);
 void simplepipe(char **);
+void cat(char *);
 void multiplepipe(vector<char *>);
 void exec_command(char **, int);
 void pipe_command(char **, int, int *);
@@ -39,6 +44,8 @@ int main() {
 
       if (vcmds.size() == 4 && strcmp(cmds[1], "|") == 0) {
         simplepipe(cmds);
+      } else if (strcmp(cmds[0], "cat") == 0 && strcmp(cmds[1], ">") == 0 && vcmds.size() == 4) {
+        cat(cmds[2]);
       } else if (ismultiplepipe(vcmds) != -1) {
         multiplepipe(vcmds);
       } else {
@@ -105,6 +112,29 @@ void simplepipe(char **commands) {
   close(pipes[1]);
   wait(&primer_comando);
   wait(&segundo_comando);
+}
+
+void cat(char *nombre_archivo) {
+  // redirecciona la entrada estándar del comando cat al archivo correspondiente
+  ofstream archivo_salida(nombre_archivo);
+
+  // si el archivo no se pudo abrir, mostrar error
+  if (!archivo_salida.is_open()) {
+    cerr << "error al abrir el archivo: " << nombre_archivo << '\n';
+    exit(1);
+  }
+
+  string linea;
+  // leer la entrada de la consola
+  while (getline(cin, linea)) {
+    // agregar la linea de entrada al buffer
+    archivo_salida << linea << '\n';
+    // escribir el buffer al archivo
+    archivo_salida.flush();
+  }
+
+  // terminar el proceso
+  exit(0);
 }
 
 void multiplepipe(vector<char *> commands) {
