@@ -12,4 +12,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -std=c++11")
 add_executable(
   shell
   src/main.cpp
+  src/imports/cat.cpp
+  src/imports/multiplepipe.cpp
+  src/imports/simplepipe.cpp
+  src/imports/parampipe.cpp
 )
