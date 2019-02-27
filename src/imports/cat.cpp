@@ -1,3 +1,6 @@
+#include <sys/wait.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include <cstdlib>
 #include <string>
 #include <iostream>
@@ -10,22 +13,16 @@ using std::cin;
 using std::cerr;
 
 void cat(char *nombre_archivo) {
-  // redirecciona la entrada estándar del comando cat al archivo correspondiente
-  ofstream archivo_salida(nombre_archivo);
+  int file = open(nombre_archivo, O_RDWR | O_CREAT, 0666);
 
-  // si el archivo no se pudo abrir, mostrar error
-  if (!archivo_salida.is_open()) {
-    cerr << "error al abrir el archivo: " << nombre_archivo << '\n';
-    exit(1);
-  }
-
-  string linea;
-  // leer la entrada de la consola
-  while (getline(cin, linea)) {
-    // agregar la linea de entrada al buffer
-    archivo_salida << linea << '\n';
-    // escribir el buffer al archivo
-    archivo_salida.flush();
+  int child = fork();
+  if (child == 0) {
+    // redireccionar stdout al archivo
+    dup2(file, STDOUT_FILENO);
+    execlp("cat", "cat", NULL);
+  } else {
+    // esperar por EOF
+    wait(&child);
   }
 
   // terminar el proceso
