@@ -75,11 +75,7 @@ vector<char *> split(string cmd) {
         args.push_back(tempchar);
         palabra = "";
       }
-      pos += 1;
-      continue;
-    }
-
-    if (cmd[pos] == '|') {
+    } else if (cmd[pos] == '|') {
       if (palabra != "") {
         char *tempchar = new char();
         strcpy(tempchar, palabra.c_str());
@@ -88,6 +84,16 @@ vector<char *> split(string cmd) {
       char *temppipe = new char();
       strcpy(temppipe, "|");
       args.push_back(temppipe);
+      palabra = "";
+    } else if (cmd[pos] == '>') {
+      if (palabra != "") {
+        char *tempchar = new char();
+        strcpy(tempchar, palabra.c_str());
+        args.push_back(tempchar);
+      }
+      char *tempgt = new char();
+      strcpy(tempgt, ">");
+      args.push_back(tempgt);
       palabra = "";
     } else {
       palabra += cmd[pos];
