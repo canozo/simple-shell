@@ -2,15 +2,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <cstdlib>
-#include <string>
-#include <iostream>
-#include <fstream>
 #include "cat.hpp"
-
-using std::ofstream;
-using std::string;
-using std::cin;
-using std::cerr;
 
 void cat(char *nombre_archivo) {
   int file = open(nombre_archivo, O_RDWR | O_CREAT, 0666);
